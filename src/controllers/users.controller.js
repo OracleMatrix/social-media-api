@@ -4,6 +4,8 @@ const bcrypt = require("bcrypt");
 const _ = require("lodash");
 const db = require("../models");
 const UserModel = db.users;
+const { Op } = require("sequelize");
+
 
 class UserController {
   async registerUser(req, res) {
@@ -227,6 +229,34 @@ class UserController {
       res.status(500).send({ message: `Internal Server ${error}` });
     }
   }
+
+  async searchUserByEmail(req, res) {
+    try {
+      const { email } = req.query;
+
+      if (!email) {
+        return res.status(400).send({ message: "Email query parameter is required" });
+      }
+
+      const users = await UserModel.findAll({
+        where: {
+          email: {
+            [Op.like]: `%${email}%`, // Partial matching
+          },
+        },
+        attributes: { exclude: ["password"] },
+      });
+
+      if (!users.length) {
+        return res.status(404).send({ message: "No users found" });
+      }
+
+      res.status(200).send(users);
+    } catch (error) {
+      res.status(500).send({ message: `Internal Server ${error}` });
+    }
+  }
+
 }
 
 module.exports = new UserController();

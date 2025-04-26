@@ -133,4 +133,29 @@ router.get("/getUserByEmail/:email", usersController.getUserByEmail);
  */
 router.get("/getUserByName/:name", usersController.getUserByName);
 
+
+/**
+ * @swagger
+ * /api/users/search:
+ *   get:
+ *     summary: Search users by email
+ *     tags: [Users]
+ *     parameters:
+ *       - in: query
+ *         name: email
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Email to search for
+ *     responses:
+ *       200:
+ *         description: List of matching users
+ *       400:
+ *         description: Invalid request or email not provided
+ *       500:
+ *         description: Internal server error
+ */
+router.get("/search", usersController.searchUserByEmail);
+
+
 module.exports = router;
