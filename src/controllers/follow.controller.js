@@ -67,17 +67,9 @@ class FollowController {
   }
 
   async unfollowUser(req, res) {
-    const { followerId, followingId } = req.body;
+    const { followerId, followingId } = req.params;
 
-    const schema = Joi.object({
-      followerId: Joi.number().required(),
-      followingId: Joi.number().required(),
-    });
-
-    const { error } = schema.validate({ followerId, followingId });
-    if (error) {
-      return res.status(400).json({ message: error.details[0].message });
-    }
+    if (!followerId || !followingId) return res.status(400).send({ message: "Both follower ID and following ID is required" });
 
     // Check if the user is not following
     const existingFollow = await FollowModel.findOne({
