@@ -80,26 +80,23 @@ router.use(auth);
 
 /**
  * @swagger
- * /api/follow/unfollow:
+ * /api/follow/unfollow/{followerId}/{followingId}:
  *   delete:
  *     summary: Unfollow a user
  *     tags: [Follow]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - followerId
- *               - followingId
- *             properties:
- *               followerId:
- *                 type: integer
- *                 example: 1
- *               followingId:
- *                 type: integer
- *                 example: 2
+ *     parameters:
+ *       - in: query
+ *         name: followerId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID of the current user
+ *       - in: query
+ *         name: followingId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID of the user to unfollow
  *     responses:
  *       200:
  *         description: Successfully unfollowed the user
@@ -256,7 +253,7 @@ router.use(auth);
  */
 
 router.post("/", FollowController.followUser);
-router.delete("/unfollow", FollowController.unfollowUser);
+router.delete("/unfollow/:followerId/:followingId", FollowController.unfollowUser);
 router.get("/followers/:userId", FollowController.getFollowers);
 router.get("/following/:userId", FollowController.getFollowing);
 
