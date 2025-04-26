@@ -70,7 +70,7 @@ A robust and scalable RESTful API for a social media platform, built with Node.j
 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/social-media-api.git
+git clone https://github.com/oraclematrix/social-media-api.git
 cd social-media-api
 ```
 
@@ -99,7 +99,9 @@ npm run dev
 
 ## 📚 API Documentation
 
-The API documentation is available at `/api-docs` when the server is running. It provides detailed information about all available endpoints, request/response formats, and authentication requirements.
+This project includes comprehensive API documentation powered by **Swagger (OpenAPI)**. When the server is running, you can access the interactive Swagger UI at the `/api-docs` endpoint. This documentation provides detailed information about all available endpoints, request and response formats, authentication requirements, and allows you to test the API directly from the browser.
+
+Swagger support ensures that the API is well-documented, easy to understand, and simple to integrate with other services or frontend applications.
 
 ## 🔗 Related Projects
 
