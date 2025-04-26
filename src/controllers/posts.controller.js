@@ -201,28 +201,30 @@ class PostController {
   async getAllPosts(req, res) {
     try {
       const userId = req.params.userId;
-      if (!userId) return res.status(400).send({ message: "User ID is required" });
+      if (!userId)
+        return res.status(400).send({ message: "User ID is required" });
 
       const userExists = await UserModel.findOne({
         where: {
-          id: userId
-        }
+          id: userId,
+        },
       });
 
-      if (!userExists) return res.status(404).send({ message: "User not found" });
+      if (!userExists)
+        return res.status(404).send({ message: "User not found" });
 
       // Find all users followed by the user
       const followedUsers = await db.follow.findAll({
         where: { followerId: userId },
-        attributes: ['followingId']
+        attributes: ["followingId"],
       });
 
-      const followedUserIds = followedUsers.map(follow => follow.followingId);
+      const followedUserIds = followedUsers.map((follow) => follow.followingId);
 
       // Get posts only from followed users
       const posts = await PostModel.findAll({
         where: {
-          userId: followedUserIds.length > 0 ? followedUserIds : null
+          userId: followedUserIds.length > 0 ? followedUserIds : null,
         },
         order: [["createdAt", "DESC"]],
         include: [
@@ -247,6 +249,8 @@ class PostController {
             },
           },
         ],
+      }).catch((err) => {
+        return res.status(400).send({ message: err });
       });
 
       res.status(200).send({
