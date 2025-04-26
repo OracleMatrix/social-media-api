@@ -138,16 +138,109 @@ router.delete("/delete/:postId", postsController.deletePost);
  */
 router.put("/update/:postId", postsController.updatePost);
 
+
+
 /**
  * @swagger
- * /api/posts:
+ * /api/posts/{userId}:
  *   get:
- *     summary: Get all posts
+ *     summary: Get all posts for a specific user
  *     tags: [Posts]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID of the user
  *     responses:
  *       200:
- *         description: List of all posts
+ *         description: List of all posts for the user
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 totalPosts:
+ *                   type: integer
+ *                 posts:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: integer
+ *                       title:
+ *                         type: string
+ *                       content:
+ *                         type: string
+ *                       userId:
+ *                         type: integer
+ *                       createdAt:
+ *                         type: string
+ *                         format: date-time
+ *                       updatedAt:
+ *                         type: string
+ *                         format: date-time
+ *                       user:
+ *                         type: object
+ *                         properties:
+ *                           id:
+ *                             type: integer
+ *                           name:
+ *                             type: string
+ *                           email:
+ *                             type: string
+ *                           following:
+ *                             type: array
+ *                             items:
+ *                               type: object
+ *                               properties:
+ *                                 followerId:
+ *                                   type: integer
+ *                                 followingId:
+ *                                   type: integer
+ *                       comments:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *                           properties:
+ *                             id:
+ *                               type: integer
+ *                             content:
+ *                               type: string
+ *                             user:
+ *                               type: object
+ *                               properties:
+ *                                 id:
+ *                                   type: integer
+ *                                 name:
+ *                                   type: string
+ *                                 email:
+ *                                   type: string
+ *                       likes:
+ *                         type: array
+ *                         items:
+ *                           type: object
+ *                           properties:
+ *                             id:
+ *                               type: integer
+ *                             user:
+ *                               type: object
+ *                               properties:
+ *                                 id:
+ *                                   type: integer
+ *                                 name:
+ *                                   type: string
+ *                                 email:
+ *                                   type: string
+ *       400:
+ *         description: User ID is required
+ *       404:
+ *         description: User not found
  */
-router.get("/", postsController.getAllPosts);
+router.get("/:userId", postsController.getAllPosts);
 
 module.exports = router;
