@@ -84,12 +84,8 @@ npm install
 3. Create a `.env` file in the root directory and add your environment variables
 
 ```env
-DB_HOST=localhost
-DB_USER=your_username
-DB_PASS=your_password
-DB_NAME=social_media_db
-JWT_SECRET=your_jwt_secret
-PORT=3000
+JWT_SECRET_KEY=your_jwt_secret
+PORT=8080
 ```
 
 4. Run the development server
