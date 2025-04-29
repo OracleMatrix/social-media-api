@@ -45,7 +45,7 @@ router.post("/create", postsController.createPost);
 
 /**
  * @swagger
- * /api/posts/getUserPosts/{userId}:
+ * /api/posts/user/{userId}:
  *   get:
  *     summary: Get all posts by a specific user
  *     tags: [Posts]
@@ -66,7 +66,7 @@ router.get("/user/:userId", postsController.getUserPosts);
 
 /**
  * @swagger
- * /api/posts/getPostById/{postId}:
+ * /api/posts/post/{postId}:
  *   get:
  *     summary: Get a post by its ID
  *     tags: [Posts]
@@ -137,8 +137,6 @@ router.delete("/delete/:postId", postsController.deletePost);
  *         description: Post not found
  */
 router.put("/update/:postId", postsController.updatePost);
-
-
 
 /**
  * @swagger
