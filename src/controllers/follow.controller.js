@@ -69,7 +69,10 @@ class FollowController {
   async unfollowUser(req, res) {
     const { followerId, followingId } = req.params;
 
-    if (!followerId || !followingId) return res.status(400).send({ message: "Both follower ID and following ID is required" });
+    if (!followerId || !followingId)
+      return res
+        .status(400)
+        .send({ message: "Both follower ID and following ID is required" });
 
     // Check if the user is not following
     const existingFollow = await FollowModel.findOne({
@@ -114,15 +117,16 @@ class FollowController {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      const followers = await FollowModel.findAll({
-        where: { followerId: userId },
+      const followers = await UserModel.findAll({
         include: [
           {
-            model: UserModel,
+            model: FollowModel,
             as: "follower",
-            attributes: { exclude: ["password"] },
+            where: { followingId: userId },
+            attributes: [],
           },
         ],
+        attributes: { exclude: ["password"] },
       });
       return res.status(200).json({
         message: "Followers fetched successfully",
@@ -144,23 +148,22 @@ class FollowController {
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-      const following = await FollowModel.findAll({
-        where: { followingId: userId },
+      const following = await UserModel.findAll({
         include: [
           {
-            model: UserModel,
+            model: FollowModel,
             as: "following",
-            attributes: { exclude: ["password"] },
+            where: { followerId: userId },
+            attributes: [],
           },
         ],
+        attributes: { exclude: ["password"] },
       });
-      return res
-        .status(200)
-        .json({
-          message: "Following fetched successfully",
-          success: true,
-          following,
-        });
+      return res.status(200).json({
+        message: "Following fetched successfully",
+        success: true,
+        following,
+      });
     } catch (err) {
       return res
         .status(500)
