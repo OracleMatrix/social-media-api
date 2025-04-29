@@ -29,6 +29,8 @@ router.use(auth);
  *                 type: string
  *               email:
  *                 type: string
+ *               password:
+ *                 type: string
  *     responses:
  *       200:
  *         description: User updated successfully
@@ -133,7 +135,6 @@ router.get("/getUserByEmail/:email", usersController.getUserByEmail);
  */
 router.get("/getUserByName/:name", usersController.getUserByName);
 
-
 /**
  * @swagger
  * /api/users/search:
@@ -156,6 +157,5 @@ router.get("/getUserByName/:name", usersController.getUserByName);
  *         description: Internal server error
  */
 router.get("/search", usersController.searchUserByEmail);
-
 
 module.exports = router;
