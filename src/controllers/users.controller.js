@@ -6,7 +6,6 @@ const db = require("../models");
 const UserModel = db.users;
 const { Op } = require("sequelize");
 
-
 class UserController {
   async registerUser(req, res) {
     try {
@@ -157,21 +156,9 @@ class UserController {
             include: [
               {
                 model: db.comments,
-                include: [
-                  {
-                    model: db.users,
-                    attributes: { exclude: ["password"] },
-                  },
-                ],
               },
               {
                 model: db.likes,
-                include: [
-                  {
-                    model: db.users,
-                    attributes: { exclude: ["password"] },
-                  },
-                ],
               },
             ],
           },
@@ -235,7 +222,9 @@ class UserController {
       const { email } = req.query;
 
       if (!email) {
-        return res.status(400).send({ message: "Email query parameter is required" });
+        return res
+          .status(400)
+          .send({ message: "Email query parameter is required" });
       }
 
       const users = await UserModel.findAll({
@@ -256,7 +245,6 @@ class UserController {
       res.status(500).send({ message: `Internal Server ${error}` });
     }
   }
-
 }
 
 module.exports = new UserController();
