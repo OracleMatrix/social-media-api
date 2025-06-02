@@ -2,17 +2,17 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middlewares/auth");
 const usersController = require("../controllers/users.controller");
-const multer  = require('multer')
+const multer = require('multer')
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './uploads')
     },
     filename: function (req, file, cb) {
-        cb(null, file.originalname + '-' + Date.now())
+        cb(null, file.originalname)
     }
 })
 
-const upload = multer({ storage: storage })
+const upload = multer({storage: storage})
 
 router.use(auth);
 
@@ -228,5 +228,62 @@ router.get("/search", usersController.searchUserByEmail);
  */
 router.post("/upload/profilePicture/:userId", upload.single('profilePic'), usersController.setProfile);
 
+/**
+ * @swagger
+ * /api/users/download/profilePicture/{userId}:
+ *   get:
+ *     summary: Download user's profile picture
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID of the user
+ *     responses:
+ *       200:
+ *         description: Returns the user's profile picture file
+ *         content:
+ *           image/jpeg:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *           image/png:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       400:
+ *         description: User ID is required
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       404:
+ *         description: User not found or profile picture not available
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                 error:
+ *                   type: string
+ */
+
+router.get('/download/profilePicture/:userId', usersController.sendProfilePicture);
 
 module.exports = router;
