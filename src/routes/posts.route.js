@@ -45,27 +45,6 @@ router.post("/create", postsController.createPost);
 
 /**
  * @swagger
- * /api/posts/user/{userId}:
- *   get:
- *     summary: Get all posts by a specific user
- *     tags: [Posts]
- *     parameters:
- *       - in: path
- *         name: userId
- *         required: true
- *         schema:
- *           type: integer
- *         description: ID of the user
- *     responses:
- *       200:
- *         description: List of user's posts
- *       404:
- *         description: User or posts not found
- */
-router.get("/user/:userId", postsController.getUserPosts);
-
-/**
- * @swagger
  * /api/posts/post/{postId}:
  *   get:
  *     summary: Get a post by its ID
