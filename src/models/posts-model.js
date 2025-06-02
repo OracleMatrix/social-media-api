@@ -31,6 +31,10 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      postPicture: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       userId: {
         type: DataTypes.INTEGER,
         references: {
