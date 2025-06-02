@@ -42,7 +42,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 const db = require("./models");
 
 db.sequelize
-  .sync()
+  .sync({alter: true})
   .then((req) => {
     console.log("Database connected...");
     app.listen(port, () => console.log(`Server listening on port ${port}`));
