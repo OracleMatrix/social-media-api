@@ -2,6 +2,17 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middlewares/auth");
 const usersController = require("../controllers/users.controller");
+const multer  = require('multer')
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname + '-' + Date.now())
+    }
+})
+
+const upload = multer({ storage: storage })
 
 router.use(auth);
 
@@ -157,5 +168,65 @@ router.get("/getUserByName/:name", usersController.getUserByName);
  *         description: Internal server error
  */
 router.get("/search", usersController.searchUserByEmail);
+
+
+/**
+ * @swagger
+ * /api/users/upload/profilePicture/{userId}:
+ *   post:
+ *     summary: Upload profile picture
+ *     tags: [Users]
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID of the user
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - profilePic
+ *             properties:
+ *               profilePic:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Profile picture uploaded successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 fieldname:
+ *                   type: string
+ *                 originalname:
+ *                   type: string
+ *                 encoding:
+ *                   type: string
+ *                 mimetype:
+ *                   type: string
+ *                 destination:
+ *                   type: string
+ *                 filename:
+ *                   type: string
+ *                 path:
+ *                   type: string
+ *                 size:
+ *                   type: integer
+ *       400:
+ *         description: Validation error
+ *       404:
+ *         description: User not found
+ *       500:
+ *         description: Internal server error
+ */
+router.post("/upload/profilePicture/:userId", upload.single('profilePic'), usersController.setProfile);
+
 
 module.exports = router;

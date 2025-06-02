@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
 const Joi = require("joi");
-const bcrypt = require("bcrypt");
 const _ = require("lodash");
 const db = require("../models");
 const UserModel = db.users;
@@ -245,6 +244,35 @@ class UserController {
       res.status(500).send({ message: `Internal Server ${error}` });
     }
   }
+
+  async setProfile(req, res) {
+    try {
+      if (!req.file) {
+        return res.status(400).send({ message: "profilePicture is required" });
+      }
+
+      if (!req.params.userId) {
+        return res.status(400).send({ message: "User ID is required" });
+      }
+
+      const user = await UserModel.findByPk(req.params.userId);
+      if (!user) return res.status(404).send({ message: "User does not exist" });
+
+      // Optional: Save filename in DB
+      await UserModel.update(
+          { profilePicture: req.file.filename },
+          { where: { id: req.params.userId } }
+      );
+
+      res.status(200).send({
+        message: "Profile picture uploaded successfully",
+        file: req.file,
+      });
+    } catch (error) {
+      res.status(500).send({ message: "Internal Server Error", error: error.message });
+    }
+  }
+
 }
 
 module.exports = new UserController();
