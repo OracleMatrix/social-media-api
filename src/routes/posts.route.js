@@ -2,6 +2,17 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middlewares/auth");
 const postsController = require("../controllers/posts.controller");
+const multer = require('multer')
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads')
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname)
+    }
+})
+
+const upload = multer({storage: storage})
 
 /**
  * @swagger
@@ -219,5 +230,71 @@ router.put("/update/:postId", postsController.updatePost);
  *         description: User not found
  */
 router.get("/:userId", postsController.getAllPosts);
+
+/**
+ * @swagger
+ * /api/posts/{postId}/picture:
+ *   post:
+ *     summary: Upload a picture for a post
+ *     tags: [Posts]
+ *     parameters:
+ *       - in: path
+ *         name: postId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID of the post
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               postPicture:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: Post picture uploaded successfully
+ *       400:
+ *         description: postPicture is required or postId is missing
+ *       404:
+ *         description: Post not found
+ */
+router.post(
+    "/:postId/picture",
+    upload.single("postPicture"),
+    postsController.uploadPostPicture
+);
+
+/**
+ * @swagger
+ * /api/posts/{postId}/picture:
+ *   get:
+ *     summary: Get a post's picture by post ID
+ *     tags: [Posts]
+ *     parameters:
+ *       - in: path
+ *         name: postId
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID of the post
+ *     responses:
+ *       200:
+ *         description: Returns the post's picture file
+ *         content:
+ *           image/*:
+ *             schema:
+ *               type: string
+ *               format: binary
+ *       400:
+ *         description: Post does not have a postPicture
+ *       404:
+ *         description: Post or file not found
+ */
+router.get("/:postId/picture", postsController.sendPostPicture);
+
 
 module.exports = router;
