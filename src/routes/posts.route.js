@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const auth = require("../middlewares/auth");
 const postsController = require("../controllers/posts.controller");
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -21,7 +20,6 @@ const upload = multer({storage: storage})
  *   description: Endpoints for managing posts
  */
 
-router.use(auth);
 
 /**
  * @swagger

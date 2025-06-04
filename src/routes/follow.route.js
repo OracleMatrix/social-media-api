@@ -1,9 +1,6 @@
 const router = require("express").Router();
 const FollowController = require("../controllers/follow.controller");
-const auth = require("../middlewares/auth");
 
-// use auth for routes and requests
-router.use(auth);
 
 /**
  * @swagger

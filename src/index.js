@@ -4,6 +4,9 @@ require("dotenv").config();
 const morgan = require("morgan");
 const helmet = require("helmet");
 const cors = require("cors");
+const auth = require("./middlewares/auth");
+const swaggerUi = require("swagger-ui-express");
+const swaggerSpec = require("./swagger");
 
 app.use(
   cors({
@@ -15,11 +18,15 @@ app.use(express.json());
 app.use(helmet());
 const port = process.env.PORT || 3000;
 
-const usersRoute = require("./routes/users.route");
-app.use("/api/users", usersRoute);
 
 const authRoute = require("./routes/auth.route");
 app.use("/api/auth", authRoute);
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+app.use(auth);
+const usersRoute = require("./routes/users.route");
+app.use("/api/users", usersRoute);
 
 const commentsRoute = require("./routes/comments.route");
 app.use("/api/comments", commentsRoute);
@@ -33,17 +40,11 @@ app.use("/api/likes", likesRoute);
 const followRoute = require("./routes/follow.route");
 app.use("/api/follow", followRoute);
 
-app.get("/", (req, res) => res.send("Hello World!"));
-
-const swaggerUi = require("swagger-ui-express");
-const swaggerSpec = require("./swagger");
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
 const db = require("./models");
 
 db.sequelize
   .sync({alter: true})
-  .then((req) => {
+  .then(() => {
     console.log("Database connected...");
     app.listen(port, () => console.log(`Server listening on port ${port}`));
   })

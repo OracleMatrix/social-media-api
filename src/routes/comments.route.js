@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const auth = require("../middlewares/auth");
 const commentsController = require("../controllers/comments.controller");
 
 /**
@@ -9,8 +8,6 @@ const commentsController = require("../controllers/comments.controller");
  *   name: Comments
  *   description: Endpoints for managing comments on posts
  */
-
-router.use(auth);
 
 /**
  * @swagger
@@ -70,16 +67,17 @@ router.get("/post/:postId", commentsController.getCommentsByPostId);
 
 /**
  * @swagger
- * /api/comments/
- *  get:
- *  summary: Get all comments
- * tags: [Comments]
- * responses:
- * 200:
- * description: List of all comments
- * 401:
- * description: Unauthorized
+ * /api/comments/:
+ *   get:
+ *     summary: Get all comments
+ *     tags: [Comments]
+ *     responses:
+ *       200:
+ *         description: List of all comments
+ *       401:
+ *         description: Unauthorized
  */
+
 router.get("/", commentsController.getAllComments);
 
 module.exports = router;

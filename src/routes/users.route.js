@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const auth = require("../middlewares/auth");
 const usersController = require("../controllers/users.controller");
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -13,8 +12,6 @@ const storage = multer.diskStorage({
 })
 
 const upload = multer({storage: storage})
-
-router.use(auth);
 
 /**
  * @swagger
